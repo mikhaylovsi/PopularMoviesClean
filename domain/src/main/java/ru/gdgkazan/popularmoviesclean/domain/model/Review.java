@@ -1,9 +1,11 @@
 package ru.gdgkazan.popularmoviesclean.domain.model;
 
+import java.io.Serializable;
+
 /**
  * @author Artur Vasilov
  */
-public class Review {
+public class Review implements Serializable {
 
     private String mAuthor;
     private String mContent;

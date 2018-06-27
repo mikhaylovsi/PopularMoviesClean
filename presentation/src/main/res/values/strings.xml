@@ -7,4 +7,7 @@
     <string name="rating">Rating \u2014 %1$s/%2$s</string>
     <string name="movie_title">%1$s \u2014 %2$s</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

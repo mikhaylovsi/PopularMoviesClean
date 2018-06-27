@@ -3,8 +3,10 @@ package ru.gdgkazan.popularmoviesclean.domain.usecase;
 import java.util.List;
 
 import ru.gdgkazan.popularmoviesclean.domain.MoviesRepository;
+import ru.gdgkazan.popularmoviesclean.domain.model.Movie;
 import ru.gdgkazan.popularmoviesclean.domain.model.Review;
 import rx.Observable;
+import sun.security.krb5.Realm;
 
 /**
  * @author Artur Vasilov
@@ -20,8 +22,9 @@ public class ReviewsUseCase {
         mAsyncTransformer = asyncTransformer;
     }
 
-    public Observable<List<Review>> getReviews(String movieId) {
-        return mRepository.getReviews(movieId)
+
+      public Observable<List<Review>> getReviews(Movie movie) {
+        return mRepository.getReviews(movie)
                 .compose(mAsyncTransformer);
     }
 }

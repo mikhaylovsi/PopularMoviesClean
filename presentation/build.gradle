@@ -44,6 +44,7 @@ dependencies {
     compile "ru.arturvasilov:rx-loader:$rxLoaderVersion"
 
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    compile 'com.android.support:support-v4:24.2.1'
     apt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
     compile "com.squareup.picasso:picasso:$picassoVersion"

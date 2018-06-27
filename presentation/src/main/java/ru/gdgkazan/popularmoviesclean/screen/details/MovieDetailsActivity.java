@@ -18,14 +18,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.arturvasilov.rxloader.LifecycleHandler;
+import ru.arturvasilov.rxloader.LoaderLifecycleHandler;
+import ru.arturvasilov.rxloader.RxUtils;
 import ru.gdgkazan.popularmoviesclean.R;
+import ru.gdgkazan.popularmoviesclean.data.repository.RepositoryProvider;
 import ru.gdgkazan.popularmoviesclean.domain.model.Movie;
 import ru.gdgkazan.popularmoviesclean.domain.model.Review;
 import ru.gdgkazan.popularmoviesclean.domain.model.Video;
+import ru.gdgkazan.popularmoviesclean.domain.usecase.ReviewsUseCase;
+import ru.gdgkazan.popularmoviesclean.domain.usecase.VideosUseCase;
 import ru.gdgkazan.popularmoviesclean.screen.general.LoadingDialog;
 import ru.gdgkazan.popularmoviesclean.screen.general.LoadingView;
 import ru.gdgkazan.popularmoviesclean.utils.Images;
@@ -57,6 +64,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     @BindView(R.id.rating)
     TextView mRatingTextView;
 
+    @BindView(R.id.reviews)
+    TextView mReviewsTextView;
+
+    @BindView(R.id.trailers)
+    TextView mTrailersTextView;
+
+    private ArrayList<Video> trailers = new ArrayList<>();
+    private ArrayList<Review> movieReviews = new ArrayList<>();
+
+
     public static void navigate(@NonNull AppCompatActivity activity, @NonNull View transitionImage,
                                 @NonNull Movie movie) {
         Intent intent = new Intent(activity, MovieDetailsActivity.class);
@@ -87,6 +104,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
 
         Movie movie = (Movie) getIntent().getSerializableExtra(EXTRA_MOVIE);
         showMovie(movie);
+
+        LifecycleHandler lifecycleHandler = LoaderLifecycleHandler.create(this, getSupportLoaderManager());
+
+        ReviewsUseCase reviewsUseCase = new ReviewsUseCase(RepositoryProvider.getMoviesRepository(), RxUtils.async());
+        VideosUseCase videosUseCase = new VideosUseCase(RepositoryProvider.getMoviesRepository(), RxUtils.async());
+
+        MovieDetailsPresenter movieDetailsPresenter =
+                new MovieDetailsPresenter(this,
+                        reviewsUseCase,
+                        videosUseCase,
+                        movie,
+                        lifecycleHandler);
+
+        movieDetailsPresenter.init();
+
+
+
 
         /**
          * TODO : task
@@ -152,21 +186,39 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
 
     @Override
     public void showTrailers(@NonNull List<Video> videos) {
-        // TODO : show trailers
+        mTrailersTextView.setText("");
+        mTrailersTextView.append("Trailers" + "\n");
+
+        for (Video x : videos){
+
+            mTrailersTextView.append(x.getName() + "\n");
+
+        }
     }
 
     @Override
     public void showReviews(@NonNull List<Review> reviews) {
-        // TODO : show reviews
+        mReviewsTextView.setText("");
+        mReviewsTextView.append("Reviews" + "\n\n\n");
+
+        for (Review x : reviews){
+
+            mReviewsTextView.append(x.getAuthor() + "\n\n");
+            mReviewsTextView.append(x.getContent() + "\n\n\n");
+
+        }
     }
+
 
     @Override
     public void showLoadingIndicator() {
+
+        mLoadingView.showLoadingIndicator();
 
     }
 
     @Override
     public void hideLoadingIndicator() {
-
+        mLoadingView.hideLoadingIndicator();
     }
 }

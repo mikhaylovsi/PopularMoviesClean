@@ -3,6 +3,7 @@ package ru.gdgkazan.popularmoviesclean.domain.usecase;
 import java.util.List;
 
 import ru.gdgkazan.popularmoviesclean.domain.MoviesRepository;
+import ru.gdgkazan.popularmoviesclean.domain.model.Movie;
 import ru.gdgkazan.popularmoviesclean.domain.model.Video;
 import rx.Observable;
 
@@ -20,8 +21,8 @@ public class VideosUseCase {
         mAsyncTransformer = asyncTransformer;
     }
 
-    public Observable<List<Video>> getMovies(String movieId) {
-        return mRepository.getVideos(movieId)
+    public Observable<List<Video>> getVideos(Movie movie) {
+        return mRepository.getVideos(movie)
                 .compose(mAsyncTransformer);
     }
 }
